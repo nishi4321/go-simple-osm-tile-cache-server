@@ -1,0 +1,5 @@
+TILE:
+  ORIGIN: "http://{s}.tile.openstreetmap.org/{z}/{x}/{y}{r}.png"
+  VALUES:
+    - KEY: ""
+      VALUE: ""
