@@ -3,3 +3,5 @@ TILE:
   VALUES:
     - KEY: ""
       VALUE: ""
+SERVER:
+  RATE_LIMIT: -1

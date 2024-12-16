@@ -1,21 +1,48 @@
 package main
 
 import (
+	"go-simple-osm-tile-cache-server/internal/config"
 	"go-simple-osm-tile-cache-server/internal/db"
 	"go-simple-osm-tile-cache-server/internal/tile"
 	"log"
 	"net/http"
 	"strconv"
 	"strings"
+	"time"
 
 	"github.com/gin-gonic/gin"
+	"golang.org/x/time/rate"
 )
 
+var limit *rate.Limiter
+
+type body struct {
+	Detail string `json:"detail"`
+}
+
 func main() {
+	rateLimit := config.Get().SERVER.RATE_LIMIT
+	limit = rate.NewLimiter(rate.Every(time.Second), rateLimit)
+	//
 	route := gin.Default()
+	// Set up rate limiter if rate limit is over 0
+	if rateLimit > 0 {
+		route.Use(rateLimiter())
+	}
 	route.GET("/tile/:z/:x/:y", getTile)
 	gin.SetMode(gin.ReleaseMode)
 	route.Run(":3123")
+}
+
+func rateLimiter() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		if limit.Allow() == false {
+			// Rate limit exceeded
+			c.File("ratelimit.png")
+			c.Abort()
+			return
+		}
+	}
 }
 
 func getTile(c *gin.Context) {

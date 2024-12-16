@@ -15,6 +15,9 @@ type Config struct {
 			Value string `yaml:"VALUE"`
 		} `yaml:"VALUES"`
 	} `yaml:"TILE"`
+	SERVER struct {
+		RATE_LIMIT int `yaml:"RATE_LIMIT"`
+	} `yaml:"SERVER"`
 }
 
 var config Config
