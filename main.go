@@ -16,10 +16,6 @@ import (
 
 var limit *rate.Limiter
 
-type body struct {
-	Detail string `json:"detail"`
-}
-
 func main() {
 	rateLimit := config.Get().SERVER.RATE_LIMIT
 	limit = rate.NewLimiter(rate.Every(time.Second), rateLimit)
